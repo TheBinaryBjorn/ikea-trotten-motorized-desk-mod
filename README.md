@@ -8,6 +8,7 @@
 - Mean Well LRS-350-24
 - BTS7960 Motor Driver
 - Bringsmart 24V 80RPM Worm Gear Motor
+- LM2596 Buck Converter
 - C14 Socket
 - C13 Cable
 - Stainless Steel Hex Rod: 6mm thick and 500mm long
