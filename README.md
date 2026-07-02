@@ -12,6 +12,7 @@
 - C13 Cable
 - Stainless Steel Hex Rod: 6mm thick and 500mm long
 - Coupler: 8mm round to 6mm hex
+- Rotary Encoder (quadrature, for height/position tracking)
 
 ## Features
 
@@ -24,3 +25,7 @@
 ## Wiring Diagram
 
 TBD
+
+## Firmware
+
+ESP32 firmware lives in [`firmware/`](firmware/), see [firmware/README.md](firmware/README.md) for pin mapping and current scope.
