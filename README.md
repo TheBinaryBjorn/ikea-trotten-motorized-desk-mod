@@ -1,6 +1,6 @@
-# IKEA Trotten Motorized Desk Mod
 
-![Desk](docs/images/desk.jpg)
+# IKEA Trotten Motorized Desk Mod
+<img width="1600" height="1200" alt="Prototype" src="https://github.com/user-attachments/assets/eee564df-1749-4d13-849d-ea481344d462" />
 
 ## Components
 
