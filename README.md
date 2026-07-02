@@ -15,7 +15,7 @@
 - Coupler: 8mm round to 6mm hex
 - Rotary Encoder (quadrature, for height/position tracking)
 
-## Features
+## Planned Features
 
 1. Raise Table (until max height).
 2. Lower Table (until min height).
