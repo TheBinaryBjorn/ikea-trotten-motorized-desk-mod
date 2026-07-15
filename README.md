@@ -23,6 +23,8 @@
 3. Stand Preset.
 4. Sit Preset.
 5. Save Preset with Long Press on Preset Button.
+## 3D Models
+- Coupler (8mm to 6mm hex): [Printables](https://www.printables.com/model/1774553-8mm-round-to-6mm-hex-coupler) | [MakerWorld](https://makerworld.com/en/models/3021831-8mm-round-to-6mm-hex-coupler)
 
 ## Wiring Diagram
 
