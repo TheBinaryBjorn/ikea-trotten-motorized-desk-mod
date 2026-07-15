@@ -1,6 +1,7 @@
 
+
 # IKEA Trotten Motorized Desk Mod
-<img width="1600" height="1200" alt="Prototype" src="https://github.com/user-attachments/assets/eee564df-1749-4d13-849d-ea481344d462" />
+<img width="2048" height="1158" alt="ComponentsPrototypeMount" src="https://github.com/user-attachments/assets/9b4b3120-6901-4dd9-83f6-93a0917cf426" />
 
 ## Components
 
@@ -13,7 +14,7 @@
 - C13 Cable
 - Stainless Steel Hex Rod: 6mm thick and 500mm long
 - Coupler: 8mm round to 6mm hex
-- Rotary Encoder (quadrature, for height/position tracking)
+- AS5600 Magnetic Rotary Encoder
 
 ## Planned Features
 
