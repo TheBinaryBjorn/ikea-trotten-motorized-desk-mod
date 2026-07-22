@@ -1,6 +1,7 @@
-# IKEA Trotten Motorized Desk Mod
 
-![Desk](docs/images/desk.jpg)
+
+# IKEA Trotten Motorized Desk Mod
+<img width="2048" height="1158" alt="ComponentsPrototypeMount" src="https://github.com/user-attachments/assets/9b4b3120-6901-4dd9-83f6-93a0917cf426" />
 
 ## Components
 
@@ -8,19 +9,22 @@
 - Mean Well LRS-350-24
 - BTS7960 Motor Driver
 - Bringsmart 24V 80RPM Worm Gear Motor
+- LM2596 Buck Converter
 - C14 Socket
 - C13 Cable
 - Stainless Steel Hex Rod: 6mm thick and 500mm long
 - Coupler: 8mm round to 6mm hex
-- Rotary Encoder (quadrature, for height/position tracking)
+- AS5600 Magnetic Rotary Encoder
 
-## Features
+## Planned Features
 
 1. Raise Table (until max height).
 2. Lower Table (until min height).
 3. Stand Preset.
 4. Sit Preset.
 5. Save Preset with Long Press on Preset Button.
+## 3D Models
+- Coupler (8mm to 6mm hex): [Printables](https://www.printables.com/model/1774553-8mm-round-to-6mm-hex-coupler) | [MakerWorld](https://makerworld.com/en/models/3021831-8mm-round-to-6mm-hex-coupler)
 
 ## Wiring Diagram
 
