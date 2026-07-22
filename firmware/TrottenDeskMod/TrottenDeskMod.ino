@@ -24,6 +24,31 @@ const int DOWN_BUTTON = 27;
 
 // --- State & Timers ---
 int currentSpeed = 0;
+unsigned long lastMotorRampTime = 0;
+
+enum ControlState { IDLE, MANUAL_UP, MANUAL_DOWN, SEEKING };
+ControlState state = IDLE;
+long targetPosition = 0;
+
+// --- Debug print throttling ---
+unsigned long lastDebugPrint = 0;
+const unsigned long DEBUG_PRINT_INTERVAL = 150;
+
+// --- Button Debounce State ---
+struct Button {
+  int pin;
+  bool lastReading;
+  bool stableState;
+  unsigned long lastChangeTime;
+  unsigned long pressStartTime;
+  bool longPressFired;
+  bool pressActive;
+};
+
+Button btnUp      = {UP_BUTTON,      HIGH, HIGH, 0, 0, false, false};
+Button btnDown     = {DOWN_BUTTON,    HIGH, HIGH, 0, 0, false, false};
+Button btnPreset1 = {PRESET1_BUTTON, HIGH, HIGH, 0, 0, false, false};
+Button btnPreset2 = {PRESET2_BUTTON, HIGH, HIGH, 0, 0, false, false};
 
 unsigned long lastEncoderReadTime = 0;
 const unsigned long ENCODER_INTERVAL = 50; 
@@ -62,6 +87,20 @@ void loop() {
   } else {
     stopMotor();
   }
+
+  // Manual buttons always take priority and cancel any preset seek in progress
+  if (btnUp.stableState == LOW) {
+    state = MANUAL_UP;
+  } else if (btnDown.stableState == LOW) {
+    state = MANUAL_DOWN;
+  } else if (state == MANUAL_UP || state == MANUAL_DOWN) {
+    state = IDLE; // manual button just released
+  }
+
+  handlePresetButton(btnPreset1, presetA);
+  handlePresetButton(btnPreset2, presetB);
+
+  driveMotor();
 }
 
 void readEncoder() {
@@ -94,13 +133,18 @@ void moveUp() {
       lastMotorRampTime = millis();
     }
   }
-  ledcWrite(RPWM, currentSpeed);
+
+  int delta = rawAngle - lastRawAngle;
+  if (delta >  TICKS_PER_REV / 2) delta -= TICKS_PER_REV; // wrapped backward
+  if (delta < -TICKS_PER_REV / 2) delta += TICKS_PER_REV; // wrapped forward
+
+  currentPosition -= delta; // inverted - confirmed correct for this mount
+  lastRawAngle = rawAngle;
 }
 
 void moveDown() {
   digitalWrite(R_EN, HIGH);
   digitalWrite(L_EN, HIGH);
-  ledcWrite(RPWM, 0);
 
   // Non-blocking speed ramp
   if (currentSpeed < 255) {
@@ -109,7 +153,6 @@ void moveDown() {
       lastMotorRampTime = millis();
     }
   }
-  ledcWrite(LPWM, currentSpeed);
 }
 
 void stopMotor() {
@@ -118,4 +161,50 @@ void stopMotor() {
   ledcWrite(LPWM, 0);
   digitalWrite(R_EN, LOW);
   digitalWrite(L_EN, LOW);
+  if (wasMoving) {
+    prefs.putLong("lastPos", currentPosition); // persist only on actual stop events
+  }
+}
+
+// ---------------- Calibration / Persistence ----------------
+
+void savePresets() {
+  prefs.putLong("presetA", presetA);
+  prefs.putLong("presetB", presetB);
+}
+
+void handleSerialCommands() {
+  if (!Serial.available()) return;
+  char c = Serial.read();
+  switch (c) {
+    case 'L': case 'l':
+      minLimit = currentPosition;
+      prefs.putLong("minLimit", minLimit);
+      checkLimitsConfigured();
+      Serial.printf("Lower limit set at %ld\n", minLimit);
+      break;
+    case 'H': case 'h':
+      maxLimit = currentPosition;
+      prefs.putLong("maxLimit", maxLimit);
+      checkLimitsConfigured();
+      Serial.printf("Upper limit set at %ld\n", maxLimit);
+      break;
+    case 'P': case 'p':
+      Serial.printf("Position: %ld  (min=%ld max=%ld presetA=%ld presetB=%ld) configured=%d\n",
+                    currentPosition, minLimit, maxLimit, presetA, presetB, limitsConfigured);
+      break;
+    case 'R': case 'r':
+      limitsConfigured = false;
+      prefs.putBool("limitsSet", false);
+      Serial.println("Limits cleared.");
+      break;
+  }
+}
+
+void checkLimitsConfigured() {
+  if (maxLimit != minLimit) {
+    if (minLimit > maxLimit) { long t = minLimit; minLimit = maxLimit; maxLimit = t; }
+    limitsConfigured = true;
+    prefs.putBool("limitsSet", true);
+  }
 }
